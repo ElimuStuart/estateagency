@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render
 from .models import Post
 
@@ -9,7 +10,22 @@ def index(request):
     return render(request, 'index.html', context)
 
 def blog(request):
-    return render(request, 'blog-grid.html', {})
+    post_list = Post.objects.all().order_by('-timestamp')
+    paginator = Paginator(post_list, 6)
+    page_request_var = 'page'
+    page = request.GET.get(page_request_var)
+    try:
+        paginated_queryset = paginator.page(page)
+    except PageNotAnInteger:
+        paginated_queryset = paginator.page(1)
+    except EmptyPage:
+        paginated_queryset = paginator.page(paginator.num_pages)
 
-def post(request):
+    context = {
+        'page_request_var': page_request_var,
+        'post_list': paginated_queryset,
+    }
+    return render(request, 'blog-grid.html', context)
+
+def post(request, id):
     return render(request, 'blog-single.html', {})
