@@ -40,6 +40,16 @@ class Post(models.Model):
             'id': self.id
         })
 
+    def get_update_url(self):
+        return reverse('post_update', kwargs={
+            'id': self.id
+        })
+
+    def get_delete_url(self):
+        return reverse('post_delete', kwargs={
+            'id': self.id
+        })
+
     @property
     def get_comments(self):
         return self.comments.all()

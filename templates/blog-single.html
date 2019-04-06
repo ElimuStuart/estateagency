@@ -61,6 +61,12 @@
               </li>
             </ul>
           </div>
+          {% if request.user.is_staff %}
+          <div>
+            <a href="{% url 'post_update' id=post.id %}">Update</a>
+            <a href="{% url 'post_delete' id=post.id %}">Delete</a>
+          </div>
+          {% endif %}
           <div class="post-content color-text-a">
             <p class="post-intro">
               {{ post.overview }}
@@ -171,7 +177,7 @@
             <div class="title-box-d">
               <h3 class="title-d"> Leave a Reply</h3>
             </div>
-            <form class="form-a" action="." method="POST">
+            <form class="form-a" action="." method="POST" novalidate="True">
               <div class="row">
                 {% csrf_token %}
                 <div class="col-md-6 mb-3">

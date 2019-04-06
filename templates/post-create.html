@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<style>
+
+.mt-5 {
+    margin-top: 9rem!important;
+}
+
+</style>
+
+<section class="mt-5 mb-5">
+
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-md-10 offset-md-1 col-lg-10 offset-lg-1">
+
+                <div class="title-box-d">
+                    <h3 class="title-d">{{ title }}</h3>
+                </div>
+
+                <div class="form-comments">
+                {{ form.media }}
+                <form class="form-a" action="." method="POST" enctype="multipart/form-data">
+                    <div class="row">
+                        {% csrf_token %}
+                        <div class="col-md-6 mb-3">
+                        {{ form|crispy }}
+                        </div>
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-a">{{ title }}</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock content %}
