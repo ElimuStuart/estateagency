@@ -2,6 +2,8 @@
 
 {% load static %}
 
+{% load crispy_forms_tags %}
+
 {% block content %}
 
   <!--/ Intro Single star /-->
@@ -45,31 +47,26 @@
             <ul class="list-inline text-center color-a">
               <li class="list-inline-item mr-2">
                 <strong>Author: </strong>
-                <span class="color-text-a">Morgan Jimenez</span>
+                <span class="color-text-a">{{ post.author }}</span>
               </li>
               <li class="list-inline-item mr-2">
                 <strong>Category: </strong>
-                <span class="color-text-a">Travel</span>
+                {% for cat in post.categories.all %}
+                <span class="color-text-a">{{ cat }}</span>
+                {% endfor %}
               </li>
               <li class="list-inline-item">
                 <strong>Date: </strong>
-                <span class="color-text-a">19 Apr. 2017</span>
+                <span class="color-text-a">{{ post.timestamp|date }}</span>
               </li>
             </ul>
           </div>
           <div class="post-content color-text-a">
             <p class="post-intro">
-              Sed porttitor lectus nibh. Lorem ipsum dolor sit amet, consectetur
-              <strong>adipiscing</strong> elit. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui.
-              Praesent sapien massa, convallis a pellentesque nec, egestas non nisi.
+              {{ post.overview }}
             </p>
-            <p>
-              Proin eget tortor risus. Donec sollicitudin molestie malesuada. Cras ultricies ligula sed magna dictum
-              porta. Pellentesque
-              in ipsum id orci porta dapibus. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet
-              dui. Lorem ipsum dolor sit amet.
-            </p>
-            <p>
+            {{ post.content|safe }}
+            <!-- <p>
               Pellentesque in ipsum id orci porta dapibus. Curabitur non nulla sit amet nisl tempus convallis quis ac
               lectus. Curabitur
               non nulla sit amet nisl tempus convallis quis ac lectus. Proin eget tortor risus. Curabitur non
@@ -87,7 +84,7 @@
               Donec rutrum congue leo eget malesuada. Curabitur aliquet quam id dui posuere blandit. Vivamus suscipit
               tortor eget felis
               porttitor volutpat. Quisque velit nisi, pretium ut lacinia in, elementum id enim.
-            </p>
+            </p> -->
           </div>
           <div class="post-footer">
             <div class="post-share">
@@ -119,26 +116,26 @@
         </div>
         <div class="col-md-10 offset-md-1 col-lg-10 offset-lg-1">
           <div class="title-box-d">
-            <h3 class="title-d">Comments (4)</h3>
+            <h3 class="title-d">Comments ({{ post.get_comments.count }})</h3>
           </div>
           <div class="box-comments">
             <ul class="list-comments">
+              {% for comment in post.get_comments %}
               <li>
                 <div class="comment-avatar">
                   <img src="{% static 'img/author-2.jpg' %}" alt="">
                 </div>
                 <div class="comment-details">
-                  <h4 class="comment-author">Emma Stone</h4>
-                  <span>18 Sep 2017</span>
+                  <h4 class="comment-author">{{ comment.name }}</h4>
+                  <span>{{ comment.timestamp|date }}</span>
                   <p class="comment-description">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores reprehenderit, provident cumque
-                    ipsam temporibus maiores
-                    quae natus libero optio, at qui beatae ducimus placeat debitis voluptates amet corporis.
+                    {{ comment.content }}
                   </p>
                   <a href="3">Reply</a>
                 </div>
               </li>
-              <li class="comment-children">
+              {% endfor %}
+              <!-- <li class="comment-children">
                 <div class="comment-avatar">
                   <img src="{% static 'img/author-1.jpg' %}" alt="">
                 </div>
@@ -167,40 +164,34 @@
                   </p>
                   <a href="3">Reply</a>
                 </div>
-              </li>
+              </li> -->
             </ul>
           </div>
           <div class="form-comments">
             <div class="title-box-d">
               <h3 class="title-d"> Leave a Reply</h3>
             </div>
-            <form class="form-a">
+            <form class="form-a" action="." method="POST">
               <div class="row">
+                {% csrf_token %}
                 <div class="col-md-6 mb-3">
                   <div class="form-group">
-                    <label for="inputName">Enter name</label>
-                    <input type="text" class="form-control form-control-lg form-control-a" id="inputName" placeholder="Name *"
-                      required>
+                    {{ form.name|as_crispy_field }}
                   </div>
                 </div>
                 <div class="col-md-6 mb-3">
                   <div class="form-group">
-                    <label for="inputEmail1">Enter email</label>
-                    <input type="email" class="form-control form-control-lg form-control-a" id="inputEmail1"
-                      placeholder="Email *" required>
+                    {{ form.email|as_crispy_field }}
                   </div>
                 </div>
                 <div class="col-md-12 mb-3">
                   <div class="form-group">
-                    <label for="inputUrl">Enter website</label>
-                    <input type="url" class="form-control form-control-lg form-control-a" id="inputUrl" placeholder="Website">
+                    {{ form.website|as_crispy_field }}
                   </div>
                 </div>
                 <div class="col-md-12 mb-3">
                   <div class="form-group">
-                    <label for="textMessage">Enter message</label>
-                    <textarea id="textMessage" class="form-control" placeholder="Comment *" name="message" cols="45"
-                      rows="8" required></textarea>
+                    {{ form.content|as_crispy_field }}
                   </div>
                 </div>
                 <div class="col-md-12">

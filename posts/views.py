@@ -1,6 +1,7 @@
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Post
+from .forms import CommentForm
 
 def index(request):
     latest = Post.objects.order_by('-timestamp')[:4]
@@ -28,4 +29,14 @@ def blog(request):
     return render(request, 'blog-grid.html', context)
 
 def post(request, id):
-    return render(request, 'blog-single.html', {})
+    post = get_object_or_404(Post, id=id)
+    form = CommentForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            form.instance.post = post
+            form.save()
+    context = {
+        'form': form,
+        'post': post
+    }
+    return render(request, 'blog-single.html', context)
