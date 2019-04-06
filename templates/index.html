@@ -591,7 +591,7 @@
               <h2 class="title-a">Latest News</h2>
             </div>
             <div class="title-link">
-              <a href="blog-grid.html">All News
+              <a href="/blog">All News
                 <span class="ion-ios-arrow-forward"></span>
               </a>
             </div>
@@ -599,30 +599,34 @@
         </div>
       </div>
       <div id="new-carousel" class="owl-carousel owl-theme">
+        {% for obj in latest %}
         <div class="carousel-item-c">
           <div class="card-box-b card-shadow news-box">
             <div class="img-box-b">
-              <img src="{% static 'img/post-2.jpg' %}" alt="" class="img-b img-fluid">
+              <img src="{{ obj.thumbnail.url }}" alt="" class="img-b img-fluid">
             </div>
             <div class="card-overlay">
               <div class="card-header-b">
                 <div class="card-category-b">
-                  <a href="#" class="category-b">House</a>
+                  {% for cat in obj.categories.all %}
+                  <a href="#" class="category-b">{{ cat }}</a>
+                  {% endfor %}
                 </div>
                 <div class="card-title-b">
                   <h2 class="title-2">
-                    <a href="blog-single.html">House is comming
+                    <a href="blog-single.html">{{ obj.title }}
                       <br> new</a>
                   </h2>
                 </div>
                 <div class="card-date">
-                  <span class="date-b">18 Sep. 2017</span>
+                  <span class="date-b">{{ obj.timestamp|date }}</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="carousel-item-c">
+        {% endfor %}
+        <!-- <div class="carousel-item-c">
           <div class="card-box-b card-shadow news-box">
             <div class="img-box-b">
               <img src="{% static 'img/post-5.jpg' %}" alt="" class="img-b img-fluid">
@@ -690,7 +694,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </section>
