@@ -1,6 +1,6 @@
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, get_object_or_404, redirect, reverse
-from .models import Post, Author
+from .models import Post, Author, Comment
 from .forms import CommentForm, PostForm
 
 def get_author(user):
@@ -37,9 +37,22 @@ def blog(request):
 
 def post(request, id):
     post = get_object_or_404(Post, id=id)
+    comments = post.comments.filter(parent__isnull=True)
+
+
     form = CommentForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
+            parent_obj = None
+            try:
+                parent_id = int(request.POST.get('parent_id'))
+            except:
+                parent_id = None
+            if parent_id:
+                parent_obj = Comment.objects.get(id=parent_id)
+                if parent_obj:
+                    comment_reply = form.save(commit=False)
+                    comment_reply.parent = parent_obj
             form.instance.post = post
             form.save()
             return redirect(reverse('post_detail', kwargs={
@@ -47,7 +60,8 @@ def post(request, id):
             }))
     context = {
         'form': form,
-        'post': post
+        'post': post,
+        'comments': comments
     }
     return render(request, 'blog-single.html', context)
 

@@ -62,6 +62,12 @@ class Comment(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     content = models.TextField()
     post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
+    parent = models.ForeignKey('self', blank=True, null=True, related_name='replies', on_delete=models.SET_NULL)
+
+    class Meta:
+        ordering = ['-timestamp']
 
     def __str__(self):
         return self.name
+
+    

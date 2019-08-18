@@ -126,7 +126,7 @@
           </div>
           <div class="box-comments">
             <ul class="list-comments">
-              {% for comment in post.get_comments %}
+              {% for comment in comments %}
               <li>
                 <div class="comment-avatar">
                   <img src="{% static 'img/author-2.jpg' %}" alt="">
@@ -137,25 +137,62 @@
                   <p class="comment-description">
                     {{ comment.content }}
                   </p>
-                  <a href="3">Reply</a>
+                  <a data-toggle="collapse" href="#collapsebank" role="button" aria-expanded="false" aria-controls="collapsebank">Reply</a>
+                  <div class="form-comments collapse" id="collapsebank">
+                    <div class="title-box-d">
+                      <h3 class="title-d"> Leave a Reply</h3>
+                    </div>
+                    <form class="form-a" action="." method="POST" novalidate="True">
+                      <div class="row">
+                        {% csrf_token %}
+                        <div class="col-md-6 mb-3">
+                          <div class="form-group">
+                            {{ form.name|as_crispy_field }}
+                          </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <div class="form-group">
+                            {{ form.email|as_crispy_field }}
+                          </div>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                          <div class="form-group">
+                            {{ form.website|as_crispy_field }}
+                          </div>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                          <div class="form-group">
+                            {{ form.content|as_crispy_field }}
+                          </div>
+                        </div>
+                        <input type="hidden" value="{{ comment.id }}" name="parent_id">
+                        <div class="col-md-12">
+                          <button type="submit" class="btn btn-a">Reply Message</button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
                 </div>
               </li>
-              {% endfor %}
-              <!-- <li class="comment-children">
+              
+              {% for reply in comment.replies.all %}
+              
+              <li class="comment-children">
                 <div class="comment-avatar">
                   <img src="{% static 'img/author-1.jpg' %}" alt="">
                 </div>
                 <div class="comment-details">
-                  <h4 class="comment-author">Oliver Colmenares</h4>
-                  <span>18 Sep 2017</span>
+                  <h4 class="comment-author">{{ reply.name }}</h4>
+                  <span>{{ reply.timestamp|date }}</span>
                   <p class="comment-description">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores reprehenderit, provident cumque
-                    ipsam temporibus maiores
-                    quae.
+                    {{ reply.content }}
                   </p>
-                  <a href="3">Reply</a>
+                  
                 </div>
               </li>
+              {% endfor %}
+              {% endfor %}
+              <!-- 
               <li>
                 <div class="comment-avatar">
                   <img src="{% static 'img/author-2.jpg' %}" alt="">
