@@ -63,8 +63,8 @@
           </div>
           {% if request.user.is_staff %}
           <div>
-            <a href="{% url 'post_update' id=post.id %}">Update</a>
-            <a href="{% url 'post_delete' id=post.id %}">Delete</a>
+            <a href="{% url 'post_update' post.id %}">Update</a>
+            <a href="{% url 'post_delete' post.id %}">Delete</a>
           </div>
           {% endif %}
           <div class="post-content color-text-a">

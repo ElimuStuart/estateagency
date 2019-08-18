@@ -73,19 +73,21 @@ def post_update(request, id):
     title = 'Update'
     post = get_object_or_404(Post, id=id)
     author = get_author(request.user)
-    form = PostForm(request.POST or None, request.FILES or None, instance=post)
     if request.method == 'POST':
+        form = PostForm(request.POST or None, request.FILES or None, instance=post)
         if form.is_valid():
-            form.instance.author = author
+            # form.instance.author = author
             form.save()
             return redirect(reverse('post_detail', kwargs={
-                'id': form.instance.id
+                'id': post.id
             }))
+    else:
+        form = PostForm(instance=post)
+
     context = {
         'title': title,
-        'form': form
+        'form': form,
     }
-
     return render(request, 'post-create.html', context)
 
 def post_delete(request, id):
